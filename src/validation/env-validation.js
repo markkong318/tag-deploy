@@ -1,4 +1,4 @@
-export function validateEnv (env) {
+export function validateEnv(env) {
   if (env !== 'dev' && env !== 'stg' && env !== 'stgqa' && env !== 'preprod' && env !== 'prod') {
     return false;
   }

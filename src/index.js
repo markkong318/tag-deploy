@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 import pkg from '@caporal/core';
-import simpleGit from 'simple-git';
-import inquirer from 'inquirer';
 import chalk from 'chalk';
+import inquirer from 'inquirer';
+import simpleGit from 'simple-git';
 import { fetch } from './git/fetch.js';
-import { pushTag } from './git/push-tag.js';
 import { generateTag } from './git/generate-tag.js';
+import { pushTag } from './git/push-tag.js';
 import { validateEnv } from './validation/env-validation.js';
 import { validateGroup } from './validation/group-validation.js';
 
@@ -23,9 +23,10 @@ program
   .description('A CLI tool to pull all Git tags and create a new tag')
   .argument('<env>', 'Environment name (e.g., dev, stg, stgqa, preprod, prod)')
   .argument('<group>', 'Group name (e.g., all, normal, ts)')
+  .argument('[append]', 'Append to the tag name', { default: '' })
   .option('--dry', 'Run the command in dry-run mode (no changes will be made)', { default: false })
   .action(async ({ args, options, logger }) => {
-    const { env, group } = args;
+    const { env, group, append } = args;
     const { dry } = options;
 
     if (!validateEnv(env)) {
@@ -56,7 +57,10 @@ program
       }
       console.log('');
 
-      const tagName = await generateTag(git, env, group);
+      let tagName = await generateTag(git, env, group);
+      if (append) {
+        tagName += `-${append.replace(/\s+/g, '-')}`;
+      }
 
       console.log(`${chalk.bold('New tag:')} ${tagName}`);
       console.log('');
@@ -65,18 +69,22 @@ program
         console.log(`${chalk.red.bold('You are about to create a new tag in the PRODUCTION environment.')}`);
       }
 
-      const { confirmPush } = await inquirer.prompt([
-        {
-          type: 'confirm',
-          name: 'confirmPush',
-          message: `Are you sure you want to push the new tag "${tagName}"?`,
-          default: false,
-        },
-      ]);
+      try {
+        const { confirmPush } = await inquirer.prompt([
+          {
+            type: 'confirm',
+            name: 'confirmPush',
+            message: `Are you sure you want to push the new tag "${tagName}"?`,
+            default: false,
+          },
+        ]);
 
-      if (!confirmPush) {
-        console.log('Operation canceled. The tag was not pushed.');
-        process.exit(0);
+        if (!confirmPush) {
+          console.log('Operation canceled. The tag was not pushed.');
+          process.exit(0);
+        }
+      } catch (e) {
+        console.log('');
       }
 
       if (dry) {
@@ -92,7 +100,7 @@ program
       console.log()
     } catch (error) {
       console.log(error);
-      console.log(`An error occurred: ${error.message}`);
+      console.log(`Error: An error occurred: ${error.message}`);
       process.exit(1);
     }
   });
