@@ -7,9 +7,9 @@ import simpleGit from 'simple-git';
 import { fetch } from './git/fetch.js';
 import { generateTag } from './git/generate-tag.js';
 import { pushTag } from './git/push-tag.js';
+import { config } from './util/config.js';
 import { validateEnv } from './validation/env-validation.js';
 import { validateGroup } from './validation/group-validation.js';
-import { config } from './util/config.js';
 import { validateRemote } from './validation/remote-validation.js';
 
 const { program } = pkg;
@@ -41,7 +41,7 @@ program
       process.exit(1);
     }
 
-    if (! await validateRemote(git)) {
+    if (!await validateRemote(git)) {
       console.log(`remote is not valid`);
       process.exit(1);
     }
