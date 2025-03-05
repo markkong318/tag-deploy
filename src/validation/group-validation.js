@@ -1,7 +1,5 @@
-export function validateGroup(group) {
-  if (group !== 'all' && group !== 'normal' && group !== 'ts') {
-    return false;
-  }
+import { config } from '../util/config.js';
 
-  return true;
+export function validateGroup(group) {
+  return config.group.indexOf(group) !== -1;
 }

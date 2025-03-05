@@ -9,6 +9,8 @@ import { generateTag } from './git/generate-tag.js';
 import { pushTag } from './git/push-tag.js';
 import { validateEnv } from './validation/env-validation.js';
 import { validateGroup } from './validation/group-validation.js';
+import { config } from './util/config.js';
+import { validateRemote } from './validation/remote-validation.js';
 
 const { program } = pkg;
 
@@ -21,8 +23,8 @@ if (process.argv.length === 2) {
 program
   .version('1.0.0')
   .description('A CLI tool to pull all Git tags and create a new tag')
-  .argument('<env>', 'Environment name (e.g., dev, stg, stgqa, preprod, prod)')
-  .argument('<group>', 'Group name (e.g., all, normal, ts)')
+  .argument('<env>', `Environment name (e.g., ${config.env.join(', ')})`)
+  .argument('<group>', `Group name (e.g., ${config.group.join(', ')})`)
   .argument('[append]', 'Append to the tag name', { default: '' })
   .option('--dry', 'Run the command in dry-run mode (no changes will be made)', { default: false })
   .action(async ({ args, options, logger }) => {
@@ -36,6 +38,11 @@ program
 
     if (!validateGroup(group)) {
       console.log(`Group is not valid: ${env}`);
+      process.exit(1);
+    }
+
+    if (! await validateRemote(git)) {
+      console.log(`remote is not valid`);
       process.exit(1);
     }
 

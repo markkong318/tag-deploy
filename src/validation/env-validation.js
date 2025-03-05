@@ -1,7 +1,5 @@
-export function validateEnv(env) {
-  if (env !== 'dev' && env !== 'stg' && env !== 'stgqa' && env !== 'preprod' && env !== 'prod') {
-    return false;
-  }
+import { config } from '../util/config.js';
 
-  return true;
+export function validateEnv(env) {
+  return config.env.indexOf(env) !== -1;
 }
