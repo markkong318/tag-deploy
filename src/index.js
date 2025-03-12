@@ -66,10 +66,7 @@ program
       }
       console.log('');
 
-      let tagName = await generateTag(git, env, group);
-      if (append) {
-        tagName += `-${append.replace(/\s+/g, '-')}`;
-      }
+      const tagName = await generateTag(git, env, group, append);
 
       console.log(`${chalk.bold('New tag:')} ${tagName}`);
       console.log('');

@@ -15,7 +15,7 @@ import { fileURLToPath } from 'url';
  * @type {Config}
  */
 function loadConfig() {
-  const configPath = process.env.CONFIG_PATH || path.resolve(fileURLToPath(path.dirname(import.meta.url)), '../../config.json');
+  const configPath = global.CONFIG_PATH || path.resolve(fileURLToPath(path.dirname(import.meta.url)), '../../config.json');
   try {
     const data = fs.readFileSync(configPath, 'utf8');
     return JSON.parse(data);
