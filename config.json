@@ -1,0 +1,23 @@
+{
+  "env": ["dev", "stg", "stgqa", "preprod", "prod"],
+  "group": ["all", "normal", "ts"],
+  "branch": "development",
+  "remote": "*",
+  "view": {
+    "dev": {
+      "*": "This is dev result message"
+    },
+    "stg": {
+      "*": "This is stg result message"
+    },
+    "stgqa": {
+      "*": "This is stgqa result message"
+    },
+    "preprod": {
+      "*": "This is preprod result message"
+    },
+    "prod": {
+      "*": "This is prod result message"
+    }
+  }
+}

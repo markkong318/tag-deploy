@@ -9,6 +9,7 @@ import { generateTag } from './git/generate-tag.js';
 import { pushTag } from './git/push-tag.js';
 import { config } from './util/config.js';
 import { getVersion } from './util/package.js';
+import { renderView } from './util/view.js';
 import { validateEnv } from './validation/env-validation.js';
 import { validateGroup } from './validation/group-validation.js';
 import { validateRemote } from './validation/remote-validation.js';
@@ -106,6 +107,9 @@ program
       console.log(`Tag "${tagName}" created and pushed successfully`);
 
       console.log()
+
+      console.log(await renderView(env, group));
+
     } catch (error) {
       console.log(error);
       console.log(`Error: An error occurred: ${error.message}`);
