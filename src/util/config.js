@@ -15,7 +15,10 @@ import { fileURLToPath } from 'url';
  * @type {Config}
  */
 function loadConfig() {
-  const configPath = global.CONFIG_PATH || path.resolve(fileURLToPath(path.dirname(import.meta.url)), '../../config.json');
+  const configPath = global.BASE_DIR ?
+    path.resolve(global.BASE_DIR, 'config.json') :
+    path.resolve(fileURLToPath(path.dirname(import.meta.url)), '../../config.json');
+
   try {
     const data = fs.readFileSync(configPath, 'utf8');
     return JSON.parse(data);
